@@ -59,7 +59,7 @@ export default function LoginScreen() {
         await SecureStore.setItemAsync("accessToken", data.data.accessToken);
         await SecureStore.setItemAsync("fullName", data.data.fullName);
         await SecureStore.setItemAsync("role", data.data.platformRoleAccess);
-        setTimeout(() => router.replace("/"), 1500);
+        router.replace("/(admin)/dashboard");
       } else {
         setError("Invalid username or password");
       }

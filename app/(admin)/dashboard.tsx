@@ -7,12 +7,19 @@ import { ScrollView, Text, View } from "react-native";
 
 import { WorkstationActivityCard } from "@/components/common/WorkstationActivityCard/WorkstationActivityCard";
 import { prettyConsole } from "@/utils/pretty-console";
-import dayjs, { Dayjs } from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
+
+
+import dayjs, { Dayjs } from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
 import { getOperationDashboardApi, TGetOperationDashboardRes } from "@/api/wcs/dashboards.v3.api";
 import { TSelectRes } from "@/api/wcs/res/select/select-res";
 import { WorkstationActivityStatus } from "@/const/workstation-activity-status";
+
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export default function DashboardScreen() {
   const [initLoading, setInitLoading] = useState(false);
@@ -112,6 +119,8 @@ export default function DashboardScreen() {
       const { data: workstationActivityData } =
         await getOperationDashboardApi();
 
+      prettyConsole(workstationActivityData)
+
       const statusList = [
         {
           id: WorkstationActivityStatus.AVAILABLE,
@@ -191,8 +200,6 @@ export default function DashboardScreen() {
           // total minutes difference
           // const durationInMin = dayjs().diff(start, "minute");
 
-          dayjs.extend(utc);
-          dayjs.extend(timezone);
 
           const durationInMin = dayjs()
             .tz("Asia/Kuala_Lumpur") // take note the time zone , should we manual set ? or follow the device ?

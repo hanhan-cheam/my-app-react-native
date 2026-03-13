@@ -7,9 +7,11 @@
     "android": "expo start -c --android",
     "ios": "expo start -c --ios",
     "web": "expo start -c --web",
-    "clean": "rm -rf .expo node_modules"
+    "clean": "rm -rf .expo node_modules",
+    "dev-tunnel": "expo start -c --tunnel"
   },
   "dependencies": {
+    "@expo/ngrok": "^4.0.0",
     "@react-navigation/drawer": "^7.9.4",
     "@react-navigation/native": "^7.0.0",
     "@rn-primitives/dialog": "^1.2.0",
