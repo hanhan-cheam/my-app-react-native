@@ -1,8 +1,8 @@
-const PROTOCOL = "http";
-const API_URL = "52.74.129.113";
-const SOCKET_URL = "18.140.38.24";
-const API_PORT = "3000";
-const SOCKET_PORT = "3011";
+const PROTOCOL = process.env.EXPO_PUBLIC_PROTOCOL
+const API_URL = process.env.EXPO_PUBLIC_API_URL
+const SOCKET_URL = process.env.EXPO_PUBLIC_SOCKET_URL 
+const API_PORT = process.env.EXPO_PUBLIC_API_PORT 
+const SOCKET_PORT = process.env.EXPO_PUBLIC_SOCKET_PORT 
 
 export const config = {
   BASE_URL: `${PROTOCOL}://${API_URL}:${API_PORT}/api/wcs`,
