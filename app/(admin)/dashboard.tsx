@@ -140,6 +140,8 @@ export default function DashboardScreen() {
         },
       ];
 
+      prettyConsole(statusList)
+
       setWorkstationActivityStatuses(statusList);
 
       setWorkstationActivities(
@@ -160,8 +162,6 @@ export default function DashboardScreen() {
     try {
       setInitLoading(true);
 
-      // const params: TGetOperationDashboardParams = {}
-
       await fetchOperationDashboardData();
     } finally {
       setInitLoading(false);
@@ -173,14 +173,12 @@ export default function DashboardScreen() {
   }, [init]);
 
   return (
-    <ScrollView className="flex w-full gap-5 p-5">
-      {/* workstation activities */}
+    <ScrollView 
+      className="flex-1 w-full"
+      contentContainerClassName="gap-3 p-5 pb-10"
+    >
       {initLoading ? (
         <Text>TODO LOADING</Text>
-      ) : workstationActivities.length === 0 ? (
-        <View className="col-span-3 flex h-[500px] w-full items-center justify-center">
-          <Text>No workstation matches the activity</Text>
-        </View>
       ) : (
         workstationActivities.map((wa, index) => {
           const {
@@ -193,30 +191,30 @@ export default function DashboardScreen() {
           } = wa;
 
           const status = statusChecker(wa);
-
-          // const start: Dayjs = dayjs(startTime);
           const start: Dayjs = dayjs.tz(startTime, "Asia/Kuala_Lumpur");
-
-          // total minutes difference
-          // const durationInMin = dayjs().diff(start, "minute");
-
-
           const durationInMin = dayjs()
-            .tz("Asia/Kuala_Lumpur") // take note the time zone , should we manual set ? or follow the device ?
+            .tz("Asia/Kuala_Lumpur")
             .diff(dayjs.tz(start, "Asia/Kuala_Lumpur"), "minute");
-
-          prettyConsole(durationInMin);
 
           return (
             <WorkstationActivityCard
+              title={
+                jobNo ||
+                activityTypeDescription ||
+                getWorkstationActivityStatusName(status)
+              }
               key={index}
               activityTypeDescription={activityTypeDescription}
-              jobNo={jobNo}
               bgColor={getWorkstationBgColor(status)}
               companyName={companyName}
               activityUsername={activityUsername}
               durationInMinute={durationInMin}
               workstationNo={workstationNo}
+          
+              showJobDuration={
+                status !== WorkstationActivityStatus.AVAILABLE
+              }
+       
             />
           );
         })

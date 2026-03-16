@@ -9,14 +9,14 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 function CustomDrawerContent(props: any) {
   async function handleLogout() {
-    await SecureStore.deleteItemAsync("accessToken");
-   router.push("/")     
+   await SecureStore.deleteItemAsync("accessToken");
+   router.replace("/");
   }
 
   return (
     <View className="flex-1 bg-white">
       {/* Header */}
-      <View className="bg-purple-600 pt-12 pb-6 px-5">
+      <View className="bg-blue-600 pt-12 pb-6 px-5">
         {/* Avatar */}
         <View className="w-14 h-14 rounded-full bg-white items-center justify-center mb-3">
           <Text className="text-purple-600 text-2xl font-bold">P</Text>
@@ -57,11 +57,11 @@ export default function AdminLayout() {
     <Drawer
       drawerContent={CustomDrawerContent}
       screenOptions={{
-        drawerActiveTintColor: "#9333ea", // purple-600
+        drawerActiveTintColor: "#2563eb", // purple-600
         drawerInactiveTintColor: "#6b7280", // gray-500
         drawerActiveBackgroundColor: "#f3e8ff", // purple-100
         drawerLabelStyle: { fontSize: 15 },
-        headerStyle: { backgroundColor: "#9333ea" },
+        headerStyle: { backgroundColor: "#2563eb" },
         headerTintColor: "#fff",
         headerTitleStyle: { fontWeight: "bold" },
       }}

@@ -1,7 +1,7 @@
 
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { Eye, EyeOff, QrCode, ChevronDown } from "lucide-react-native";
 
@@ -34,6 +34,7 @@ export default function LoginScreen() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
 
   async function handleLogin() {
     if (!username) {
@@ -70,6 +71,8 @@ export default function LoginScreen() {
       setLoading(false);
     }
   }
+
+
 
   return (
     <View className="flex-1 justify-center p-6 bg-background">

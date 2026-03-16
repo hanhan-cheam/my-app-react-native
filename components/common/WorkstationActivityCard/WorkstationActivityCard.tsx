@@ -4,22 +4,24 @@ import { Text, View } from "react-native";
 
 export type TWorkstationActivityCardProps = {
   workstationNo: string;
-  jobNo: string;
+  title: string;
   durationInMinute: number;
   activityUsername: string;
   activityTypeDescription: string;
   companyName: string;
   bgColor: CSSProperties["backgroundColor"];
+  showJobDuration: boolean
 };
 
 export const WorkstationActivityCard = ({
   activityTypeDescription,
-  jobNo,
+  title,
   companyName,
   activityUsername,
   durationInMinute,
   workstationNo,
   bgColor,
+  showJobDuration,
 }: TWorkstationActivityCardProps) => {
   return (
     <View className="rounded-xl overflow-hidden shadow-sm mb-3">
@@ -37,10 +39,10 @@ export const WorkstationActivityCard = ({
           {activityTypeDescription}
         </Text>
         <Text
-          className="text-base font-semibold text-orange-700 text-center"
+          className="text-base font-semibold text-center"
           numberOfLines={1}
         >
-          {jobNo}
+          {title}
         </Text>
 
         {/* Footer row */}
@@ -55,9 +57,11 @@ export const WorkstationActivityCard = ({
             >
               {activityUsername}
             </Text>
-            <Text className="text-xs text-gray-500">
-              {`since ${formatMinutesToDayHourMinutes(durationInMinute)} ago`}
-            </Text>
+              {showJobDuration && (
+                <Text className="text-xs text-gray-500">
+                  {`since ${formatMinutesToDayHourMinutes(durationInMinute)} ago`}
+                </Text>
+              )}
           </View>
         </View>
       </View>
