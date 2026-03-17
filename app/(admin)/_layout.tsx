@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Redirect, router } from 'expo-router';
+import { router } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
@@ -10,7 +10,6 @@ function CustomDrawerContent(props: any) {
 
   async function handleLogout() {
     await signOut();
-    router.replace('/');
   }
 
   return (
@@ -55,6 +54,12 @@ function CustomDrawerContent(props: any) {
 export default function AdminLayout() {
   const { token, isLoading } = useAuth();
 
+  React.useEffect(() => {
+    if (!isLoading && !token) {
+      router.replace('/');
+    }
+  }, [token, isLoading]);
+
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -63,7 +68,7 @@ export default function AdminLayout() {
     );
   }
 
-  if (!token) return <Redirect href="/" />;
+  if (!token) return null;
 
   return (
     <Drawer

@@ -3,6 +3,7 @@ import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/auth";
+
 import { ActivityIndicator, View } from "react-native";
 import { Eye, EyeOff, QrCode, ChevronDown } from "lucide-react-native";
 
@@ -21,7 +22,13 @@ import {
 import { loginApi } from "@/api/wcs/auth";
 
 export default function LoginScreen() {
-  const { signIn } = useAuth();
+  const { signIn, token, isLoading } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && token) {
+      router.replace("/(admin)/dashboard");
+    }
+  }, [token, isLoading]);
   const [workstationInputMethod, setWorkstationInputMethod] = useState<
     "scan" | "dropdown"
   >("scan");
@@ -62,7 +69,6 @@ export default function LoginScreen() {
         await signIn(data.data.accessToken);
         await SecureStore.setItemAsync("fullName", data.data.fullName);
         await SecureStore.setItemAsync("role", data.data.platformRoleAccess);
-        router.replace("/(admin)/dashboard");
       } else {
         setError("Invalid username or password");
       }
