@@ -80,7 +80,6 @@ export default function DashboardScreen() {
 
         case WorkstationActivityStatus.JOB_START_MORE_THAN_ONE_HOUR:
           return `Job started more than 1hr.`;
-        // FE count the duration, BE only give start time //TODO
 
         default:
           return "Status not yet supported by client side";
@@ -89,28 +88,8 @@ export default function DashboardScreen() {
     [],
   );
 
-  const getWorkstationAlertDurationInMin = useMemo(
-    () =>
-      (status: WorkstationActivityStatus, binWaitingDurationInMin: number) => {
-        return status === WorkstationActivityStatus.JOB_START_MORE_THAN_ONE_HOUR
-          ? binWaitingDurationInMin
-          : 0;
-      },
-    [],
-  );
 
-  const getWorkstationAlertLabel = useMemo(
-    () => (status: WorkstationActivityStatus) => {
-      switch (status) {
-        case WorkstationActivityStatus.JOB_START_MORE_THAN_ONE_HOUR:
-          return "Job Duration";
 
-        default:
-          return "";
-      }
-    },
-    [],
-  );
 
   const fetchOperationDashboardData = useCallback(async () => {
     try {

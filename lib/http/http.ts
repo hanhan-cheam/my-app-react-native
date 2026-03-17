@@ -6,6 +6,8 @@ import { FetchWrapper } from "../fetch/fetch";
 
 const BASE_URL = config.BASE_URL;
 
+console.log("BASE_URL", BASE_URL)
+
 export const httpApi = new FetchWrapper({
   baseUrl: `${BASE_URL}/v1/`,
 });

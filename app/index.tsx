@@ -2,6 +2,7 @@
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/context/auth";
 import { ActivityIndicator, View } from "react-native";
 import { Eye, EyeOff, QrCode, ChevronDown } from "lucide-react-native";
 
@@ -20,6 +21,7 @@ import {
 import { loginApi } from "@/api/wcs/auth";
 
 export default function LoginScreen() {
+  const { signIn } = useAuth();
   const [workstationInputMethod, setWorkstationInputMethod] = useState<
     "scan" | "dropdown"
   >("scan");
@@ -57,7 +59,7 @@ export default function LoginScreen() {
       });
 
       if (data.resultCode === "success") {
-        await SecureStore.setItemAsync("accessToken", data.data.accessToken);
+        await signIn(data.data.accessToken);
         await SecureStore.setItemAsync("fullName", data.data.fullName);
         await SecureStore.setItemAsync("role", data.data.platformRoleAccess);
         router.replace("/(admin)/dashboard");

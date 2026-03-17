@@ -1,16 +1,16 @@
-
-import * as SecureStore from "expo-secure-store";
-import { router } from "expo-router";
-import { Drawer } from "expo-router/drawer";
-import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer"
-
-import { Text, TouchableOpacity, View } from "react-native";
-
+import * as React from 'react';
+import { Redirect, router } from 'expo-router';
+import { Drawer } from 'expo-router/drawer';
+import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { useAuth } from '@/context/auth';
 
 function CustomDrawerContent(props: any) {
+  const { signOut } = useAuth();
+
   async function handleLogout() {
-   await SecureStore.deleteItemAsync("accessToken");
-   router.replace("/");
+    await signOut();
+    router.replace('/');
   }
 
   return (
@@ -53,39 +53,50 @@ function CustomDrawerContent(props: any) {
 }
 
 export default function AdminLayout() {
+  const { token, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
+  if (!token) return <Redirect href="/" />;
+
   return (
     <Drawer
       drawerContent={CustomDrawerContent}
       screenOptions={{
-        drawerActiveTintColor: "#2563eb", // purple-600
-        drawerInactiveTintColor: "#6b7280", // gray-500
-        drawerActiveBackgroundColor: "#f3e8ff", // purple-100
+        drawerActiveTintColor: '#2563eb',
+        drawerInactiveTintColor: '#6b7280',
+        drawerActiveBackgroundColor: '#f3e8ff',
         drawerLabelStyle: { fontSize: 15 },
-        headerStyle: { backgroundColor: "#2563eb" },
-        headerTintColor: "#fff",
-        headerTitleStyle: { fontWeight: "bold" },
+        headerStyle: { backgroundColor: '#2563eb' },
+        headerTintColor: '#fff',
+        headerTitleStyle: { fontWeight: 'bold' },
       }}
     >
       <Drawer.Screen
         name="dashboard"
         options={{
-          title: "Station Operation Dashboard",
-          drawerLabel: "Station Operation Dashboard",
+          title: 'Station Operation Dashboard',
+          drawerLabel: 'Station Operation Dashboard',
         }}
       />
       <Drawer.Screen
         name="profile"
         options={{
-          title: "Profile",
-          drawerLabel: "Profile",
+          title: 'Profile',
+          drawerLabel: 'Profile',
         }}
       />
-
       <Drawer.Screen
         name="index"
         options={{
-          title: "Picking",
-          drawerLabel: "Picking",
+          title: 'Picking',
+          drawerLabel: 'Picking',
         }}
       />
     </Drawer>
