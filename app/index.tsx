@@ -1,62 +1,53 @@
+import * as SecureStore from 'expo-secure-store';
+import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { useAuth } from '@/context/auth';
 
-import * as SecureStore from "expo-secure-store";
-import { router } from "expo-router";
-import { useEffect, useState } from "react";
-import { useAuth } from "@/context/auth";
-
-import { ActivityIndicator, View } from "react-native";
-import { Eye, EyeOff, QrCode, ChevronDown } from "lucide-react-native";
+import { ActivityIndicator, View } from 'react-native';
+import { Eye, EyeOff, QrCode, ChevronDown } from 'lucide-react-native';
 
 // RNR components
-import { Text } from "@/components/ui/text";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { loginApi } from "@/api/wcs/auth";
+import { Text } from '@/components/ui/text';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { loginApi } from '@/api/wcs/auth';
 
 export default function LoginScreen() {
   const { signIn, token, isLoading } = useAuth();
 
   useEffect(() => {
     if (!isLoading && token) {
-      router.replace("/(admin)/dashboard");
+      router.replace('/(admin)/dashboard');
     }
   }, [token, isLoading]);
-  const [workstationInputMethod, setWorkstationInputMethod] = useState<
-    "scan" | "dropdown"
-  >("scan");
+
+  const [workstationInputMethod, setWorkstationInputMethod] = useState<'scan' | 'dropdown'>('scan');
   const [workstationId, setWorkstationId] = useState<number | null>(null);
 
-  const [username, setUsername] = useState("");
-  const [usernameError, setUsernameError] = useState("");
+  const [username, setUsername] = useState('');
+  const [usernameError, setUsernameError] = useState('');
 
-  const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
+  const [error, setError] = useState('');
 
   async function handleLogin() {
     if (!username) {
-      setUsernameError("Username must be provided.");
+      setUsernameError('Username must be provided.');
       return;
     }
     if (!password) {
-      setPasswordError("Password must be provided.");
+      setPasswordError('Password must be provided.');
       return;
     }
 
     setLoading(true);
-    setError("");
+    setError('');
 
     try {
       const data = await loginApi({
@@ -65,33 +56,27 @@ export default function LoginScreen() {
         ...(workstationId ? { workstationId } : {}),
       });
 
-      if (data.resultCode === "success") {
+      if (data.resultCode === 'success') {
         await signIn(data.data.accessToken);
-        await SecureStore.setItemAsync("fullName", data.data.fullName);
-        await SecureStore.setItemAsync("role", data.data.platformRoleAccess);
+        await SecureStore.setItemAsync('fullName', data.data.fullName);
+        await SecureStore.setItemAsync('role', data.data.platformRoleAccess);
       } else {
-        setError("Invalid username or password");
+        setError('Invalid username or password');
       }
     } catch (e) {
       console.log(e);
-      setError("Connection error. Please try again.");
+      setError('Connection error. Please try again.');
     } finally {
       setLoading(false);
     }
   }
 
-
-
   return (
-    <View className="flex-1 justify-center p-6 bg-background">
+    <View className="flex-1 justify-center bg-background p-6">
       {/* Header */}
-      <View className="items-center mb-8">
-        <Text className="text-3xl font-bold tracking-widest text-foreground">
-          PINGSPACE
-        </Text>
-        <Text className="text-muted-foreground text-sm mt-1">
-          Management Console
-        </Text>
+      <View className="mb-8 items-center">
+        <Text className="text-3xl font-bold tracking-widest text-foreground">PINGSPACE</Text>
+        <Text className="mt-1 text-sm text-muted-foreground">Management Console</Text>
       </View>
 
       <Card>
@@ -105,16 +90,13 @@ export default function LoginScreen() {
           <View>
             <Label className="mb-2">Workstation Input Method</Label>
             <View className="flex-row gap-4">
-              {(["scan", "dropdown"] as const).map((method) => (
+              {(['scan', 'dropdown'] as const).map((method) => (
                 <Button
                   key={method}
-                  variant={
-                    workstationInputMethod === method ? "default" : "outline"
-                  }
+                  variant={workstationInputMethod === method ? 'default' : 'outline'}
                   size="sm"
                   onPress={() => setWorkstationInputMethod(method)}
-                  className="flex-1"
-                >
+                  className="flex-1">
                   <Text className="capitalize">{method}</Text>
                 </Button>
               ))}
@@ -127,14 +109,14 @@ export default function LoginScreen() {
             <View className="relative">
               <Input
                 placeholder={
-                  workstationInputMethod === "scan"
-                    ? "Scan workstation QR..."
-                    : "Select workstation..."
+                  workstationInputMethod === 'scan'
+                    ? 'Scan workstation QR...'
+                    : 'Select workstation...'
                 }
                 className="pr-10"
               />
               <View className="absolute right-3 top-3">
-                {workstationInputMethod === "scan" ? (
+                {workstationInputMethod === 'scan' ? (
                   <QrCode size={18} className="text-muted-foreground" />
                 ) : (
                   <ChevronDown size={18} className="text-muted-foreground" />
@@ -151,13 +133,13 @@ export default function LoginScreen() {
               value={username}
               onChangeText={(val) => {
                 setUsername(val);
-                setUsernameError("");
+                setUsernameError('');
               }}
               autoCapitalize="none"
-              className={usernameError ? "border-destructive" : ""}
+              className={usernameError ? 'border-destructive' : ''}
             />
             {usernameError ? (
-              <Text className="text-destructive text-xs">{usernameError}</Text>
+              <Text className="text-xs text-destructive">{usernameError}</Text>
             ) : null}
           </View>
 
@@ -170,18 +152,17 @@ export default function LoginScreen() {
                 value={password}
                 onChangeText={(val) => {
                   setPassword(val);
-                  setPasswordError("");
+                  setPasswordError('');
                 }}
                 secureTextEntry={!showPassword}
                 onSubmitEditing={handleLogin}
-                className={`pr-10 ${passwordError ? "border-destructive" : ""}`}
+                className={`pr-10 ${passwordError ? 'border-destructive' : ''}`}
               />
               <Button
                 variant="ghost"
                 size="icon"
                 className="absolute right-1 top-1 h-8 w-8"
-                onPress={() => setShowPassword(!showPassword)}
-              >
+                onPress={() => setShowPassword(!showPassword)}>
                 {showPassword ? (
                   <EyeOff size={18} className="text-muted-foreground" />
                 ) : (
@@ -190,29 +171,21 @@ export default function LoginScreen() {
               </Button>
             </View>
             {passwordError ? (
-              <Text className="text-destructive text-xs">{passwordError}</Text>
+              <Text className="text-xs text-destructive">{passwordError}</Text>
             ) : null}
           </View>
 
           {/* Forgot Password */}
-          <Button variant="ghost" className="self-end -mt-2 h-auto py-0">
-            <Text className="text-primary text-sm">Forgot password?</Text>
+          <Button variant="ghost" className="-mt-2 h-auto self-end py-0">
+            <Text className="text-sm text-primary">Forgot password?</Text>
           </Button>
 
           {/* General Error */}
-          {error ? (
-            <Text className="text-destructive text-sm text-center">
-              {error}
-            </Text>
-          ) : null}
+          {error ? <Text className="text-center text-sm text-destructive">{error}</Text> : null}
 
           {/* Login Button */}
           <Button onPress={handleLogin} disabled={loading} className="mt-2">
-            {loading ? (
-              <ActivityIndicator color="white" />
-            ) : (
-              <Text>Log In</Text>
-            )}
+            {loading ? <ActivityIndicator color="white" /> : <Text>Log In</Text>}
           </Button>
         </CardContent>
       </Card>
